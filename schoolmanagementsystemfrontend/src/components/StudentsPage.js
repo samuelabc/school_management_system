@@ -19,8 +19,50 @@ const StudentsPage = (props) => {
 	}, [])
 
 	const handleInsertStudent = async(studentObj) => {
-		const newstudent = await studentsService.create(studentObj);
-		// setStudents(students.concat(newstudent));
+		try {
+			await studentsService.create(studentObj);
+			setStudents(students.concat(studentObj));
+		}
+		catch(err) {
+			console.log(err.response)
+			console.log("insert failed", err.response.data.error);
+			const error = JSON.parse(err.response.data.error);
+			console.log(error);
+			const message = error[0].message;
+			console.log(message);
+			window.alert(`insert failed\nError: ${message}`);
+		}
+		
+	}
+	const handleDeleteStudent = async(student_id) => {
+		try {
+			await studentsService.remove(student_id);
+			const newStudentTable = await students.filter(student => {
+				return student.student_id !== student_id;
+			});
+			setStudents(newStudentTable);
+		}
+		catch(err) {
+			console.log("delete failed", err.response.data.error);
+			window.alert(`delete failed\nError: ${err.response.data.error}`)
+		}
+	}
+	const handleUpdateStudent = async(oriStudentId, studentObj) => {
+		try {
+			console.log('studentObj', studentObj);
+			await studentsService.update(oriStudentId, studentObj);
+			const newStudentTable = await students.map(student => {
+				return student.student_id !== oriStudentId ? student : studentObj;
+			});
+			console.log('newStudentTable',newStudentTable);
+			setStudents(newStudentTable);
+			return true;
+		}
+		catch(err) {
+			console.log("update failed", err.response);
+			window.alert(`update failed\nError: ${err.response.data.error}`);
+			return false;
+		}
 	}
 
 	return (
@@ -37,7 +79,7 @@ const StudentsPage = (props) => {
 				<button onClick={() => handleReturnHomePage()} >return</button>
 			</div>
 			<div>
-				<StudentTable students={students} />
+				<StudentTable students={students} handleDeleteStudent={handleDeleteStudent} handleUpdateStudent={handleUpdateStudent}/>
 			</div>
 		</div>
 	);

@@ -8,8 +8,8 @@ const StudentForm = (props) => {
 	const [classId, setClassId] = useState('');
 
 	const InsertStudent = async (event) => {
-		const student_id = parseInt(studentId, 10);
-		const class_id = parseInt(classId, 10);
+		const student_id = studentId;
+		const class_id = classId;
 		event.preventDefault();
 		handleInsertStudent({student_id, name, class_id})
 		setStudentId('');
@@ -42,7 +42,7 @@ const StudentForm = (props) => {
 						onChange={({target}) => setClassId(target.value)}
 					/>
 				</div>
-				<button className='cancelbutton' onClick={() => togglableRef.current.toggleVisibility()} >Cancel</button>
+				<button className='cancelbutton' type="button" onClick={() => togglableRef.current.toggleVisibility()} >Cancel</button>
 				<button className='confirmbutton' type="submit">Confirm</button>
 			</form>
 		</div>

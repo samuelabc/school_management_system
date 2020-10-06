@@ -126,3 +126,22 @@ input {
 	margin-right: 20px;
 	box-sizing: border-box;
 }
+
+.searchbox {
+	width: 30%;
+	padding: 6px;
+	margin-top: 8px;
+	margin-right: 0px;
+	font-size: 17px;
+	border: 2px solid #507ba2;
+	border-radius: 5px;
+}
+.searchbutton {
+	/* float: center; */
+	padding: 10px;
+	margin-top: 8px;
+	background: #ddd;
+	font-size: 17px;
+	border: none;
+	cursor: pointer;
+}

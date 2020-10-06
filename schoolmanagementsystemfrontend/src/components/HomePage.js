@@ -15,7 +15,7 @@ const HomePage = (props) => {
 				<button onClick={() => handlePage('TeachersPage')}>Teachers Info</button>
 			</div>
 			<div>
-				<button onClick={() => handlePage('ClassSelectionPage')}>Class Selection Info</button>
+				<button onClick={() => handlePage('CoursePage')}>Course Catalog</button>
 			</div>
 		</div>
 	);

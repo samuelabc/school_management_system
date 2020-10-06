@@ -1,28 +1,25 @@
-const studentsRouter = require('express').Router()
+const teachersRouter = require('express').Router()
+
 const odbc = require('odbc');
 
-async function GetStudentDB() {
+teachersRouter.get('/', async (req, res) => {
 	const connectionConfig = {
 		connectionString: process.env.ODBC_CONNECTION_STRING,
 	};
 	const connection = await odbc.connect(connectionConfig);
-	const result = await connection.query('SELECT * FROM student');
-	console.log(JSON.stringify(result));
-	return JSON.stringify(result);
-}
-studentsRouter.get('/', async (req, res) => {
-	const result = await GetStudentDB();
-	res.send(result);
+	const result = await connection.query('SELECT * FROM teacher');
+	res.send(JSON.stringify(result));
 })
 
-studentsRouter.post('/', async(req, res) => {
+teachersRouter.post('/', async(req, res) => {
 	const connectionConfig = {
 		connectionString: process.env.ODBC_CONNECTION_STRING,
 	};
-	const student = req.body;
+	const teacher = req.body;
+	console.log(teacher);
 	try {
 		const connection = await odbc.connect(connectionConfig);
-		await connection.query(`INSERT INTO student VALUES('${student.student_id}', '${student.name}', '${student.class_id}')`);
+		await connection.query(`INSERT INTO teacher VALUES('${teacher.teacher_id}', '${teacher.name}', '${teacher.department}')`);
 		const result = await connection.query(`SELECT ROW_COUNT()`);
 		if (result.count === 1) {
 			res.status(204).end();
@@ -38,7 +35,7 @@ studentsRouter.post('/', async(req, res) => {
 	}
 })
 
-studentsRouter.delete('/:id', async (request, response) => {
+teachersRouter.delete('/:id', async (request, response) => {
 	const connectionConfig = {
 		connectionString: process.env.ODBC_CONNECTION_STRING,
 	};
@@ -46,7 +43,7 @@ studentsRouter.delete('/:id', async (request, response) => {
 	const connection = await odbc.connect(connectionConfig);
 	try {
 		const id = request.params.id;
-		await connection.query(`DELETE FROM student WHERE student_id='${id}';`);
+		await connection.query(`DELETE FROM teacher WHERE teacher_id='${id}';`);
 		const result = await connection.query(`SELECT ROW_COUNT()`);
 		console.log("result.count",result.count)
 		if (result.count === 1) {
@@ -61,20 +58,20 @@ studentsRouter.delete('/:id', async (request, response) => {
 	}
 })
 
-studentsRouter.put('/:id', async(request, response) => {
+teachersRouter.put('/:id', async(request, response) => {
 	const connectionConfig = {
 		connectionString: process.env.ODBC_CONNECTION_STRING,
 	};
 	const connection = await odbc.connect(connectionConfig);
 	try {
-		const student = request.body;
+		const teacher = request.body;
 		const id = request.params.id;
-		console.log('updatestudent',student);
+		console.log('updateteacher',teacher);
 		console.log('id',id);
 		await connection.query
-			(`UPDATE student
-				SET student_id='${student.student_id}', name='${student.name}', class_id='${student.class_id}'
-				WHERE student_id='${id}';`
+			(`UPDATE teacher
+				SET teacher_id='${teacher.teacher_id}', name='${teacher.name}', department='${teacher.department}'
+				WHERE teacher_id='${id}';`
 			);
 		const result = await connection.query(`SELECT ROW_COUNT()`);
 		console.log(result.count);
@@ -90,4 +87,4 @@ studentsRouter.put('/:id', async(request, response) => {
 	}
 })
 
-module.exports = studentsRouter
+module.exports = teachersRouter

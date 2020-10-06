@@ -1,8 +1,10 @@
-POST http://localhost:3001/api/students
-Content-Type: application/json
+# POST http://localhost:3001/api/students
+# Content-Type: application/json
 
-{
-    "student_id": 787877,
-    "name": "hello",
-	"class_id": 667431
-}
+# {
+#     "student_id": 341,
+#     "name": "hello",
+# 	"class_id": 667431
+# }
+
+DELETE  http://localhost:3001/api/students/45

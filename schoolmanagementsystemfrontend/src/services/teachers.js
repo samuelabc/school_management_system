@@ -1,5 +1,5 @@
 import axios from 'axios';
-const baseUrl = '/api/students';
+const baseUrl = '/api/teachers';
 
 const getAll = async() => {
 	const response = await axios.get(baseUrl);
@@ -19,10 +19,10 @@ const remove = async(id) => {
 	return response.data;
 }
 
-const update = async(oriStudentId, newStudent) => {
-	console.log(oriStudentId);
-	console.log(newStudent);
-	const response = await axios.put(`${baseUrl}/${oriStudentId}`, newStudent);
+const update = async(oriTeacherId, newTeacher) => {
+	console.log(oriTeacherId);
+	console.log(newTeacher);
+	const response = await axios.put(`${baseUrl}/${oriTeacherId}`, newTeacher);
 	return response.data;
 }
 

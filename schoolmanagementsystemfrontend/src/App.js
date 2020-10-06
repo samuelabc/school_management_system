@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import ClassSelectionPage from './components/ClassSelectionPage';
+import CoursePage from './components/CoursePage';
 import FootNote from './components/FootNote';
 import HomePage from './components/HomePage';
 import StudentsPage from './components/StudentsPage';
@@ -8,6 +8,8 @@ import TeachersPage from './components/TeachersPage';
 const App = () => {
 	const [page, setPage] = useState('HomePage');
 	const [students, setStudents] = useState([]);
+	const [teachers, setTeachers] = useState([]);
+	const [courses, setCourses] = useState([]);
 
 	const handlePage = async(newpage) => {
 		await setPage(newpage);
@@ -36,15 +38,17 @@ const App = () => {
 	else if (page === 'TeachersPage') {
 		return (
 			<div>
-				<TeachersPage handleReturnHomePage={handleReturnHomePage} />
+				<TeachersPage handleReturnHomePage={handleReturnHomePage}
+					teachers={teachers} setTeachers={setTeachers} />
 				<FootNote />
 			</div>
 			);
 	}
-	else if (page === 'ClassSelectionPage') {
+	else if (page === 'CoursePage') {
 		return (
 			<div>
-				<ClassSelectionPage handleReturnHomePage={handleReturnHomePage} />
+				<CoursePage handleReturnHomePage={handleReturnHomePage} 
+					courses={courses} setCourses={setCourses} />
 				<FootNote />
 			</div>
 		);
