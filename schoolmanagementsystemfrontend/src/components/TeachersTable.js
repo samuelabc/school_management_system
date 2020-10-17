@@ -102,7 +102,7 @@ const TeacherTable = (props) => {
 						)
 					}
 					else {
-						if (teacher.teacher_id.includes(searctText) || teacher.name.includes(searctText) || teacher.department.includes(searctText)) {
+						if (teacher.teacher_id.toLowerCase().includes(searctText.toLowerCase()) || teacher.name.toLowerCase().includes(searctText.toLowerCase()) || teacher.department.toLowerCase().includes(searctText.toLowerCase())) {
 							return (
 								<tr key={teacher.teacher_id}>
 									<td>{teacher.teacher_id}</td>

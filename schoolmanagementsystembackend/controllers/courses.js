@@ -2,13 +2,13 @@ const coursesRouter = require('express').Router()
 
 const odbc = require('odbc');
 
-coursesRouter.get('/', async (req, res) => {
+coursesRouter.get('/', async (request, response) => {
 	const connectionConfig = {
 		connectionString: process.env.ODBC_CONNECTION_STRING,
 	};
 	const connection = await odbc.connect(connectionConfig);
 	const result = await connection.query('SELECT * FROM course');
-	res.send(JSON.stringify(result));
+	response.send(JSON.stringify(result));
 })
 
 coursesRouter.post('/', async(request, response) => {
@@ -19,7 +19,27 @@ coursesRouter.post('/', async(request, response) => {
 	console.log(course);
 	try {
 		const connection = await odbc.connect(connectionConfig);
-		await connection.query(`INSERT INTO course VALUES('${course.course_id}', '${course.name}', '${course.teacher_id}')`);
+		var queryStr = 'INSERT INTO course VALUES(';
+		if (course.course_id === '') {
+			queryStr += 'NULL, ';
+		}
+		else {
+			queryStr += `'${course.course_id}', `;
+		}
+		if (course.name === '') {
+			queryStr += 'NULL, ';
+		}
+		else {
+			queryStr += `'${course.name}', `;
+		}
+		if (course.teacher_id === '') {
+			queryStr += 'NULL)';
+		}
+		else {
+			queryStr += `'${course.teacher_id}')`;
+		}
+		await connection.query(queryStr);
+		// await connection.query(`INSERT INTO course VALUES('${course.course_id}', '${course.name}', '${course.teacher_id}')`);
 		const result = await connection.query(`SELECT ROW_COUNT()`);
 		if (result.count === 1) {
 			response.status(204).end();
@@ -74,11 +94,32 @@ coursesRouter.put('/:coid/:tcid', async(request, response) => {
 		const oriTeacherId = request.params.tcid;
 		console.log('updateCourse',course);
 		console.log('id',oriCourseId, oriTeacherId);
-		await connection.query
-			(`UPDATE course
-				SET course_id='${course.course_id}', name='${course.name}', teacher_id='${course.teacher_id}'
-				WHERE course_id='${oriCourseId}' AND teacher_id='${oriTeacherId}';`
-			);
+		var queryStr = 'UPDATE course SET ';
+		if (course.course_id === '') {
+			queryStr += 'course_id=NULL,';
+		}
+		else {
+			queryStr += `course_id='${course.course_id}', `;
+		}
+		if (course.name === '') {
+			queryStr += 'name=NULL,';
+		}
+		else {
+			queryStr += `name='${course.name}', `;
+		}
+		if (course.teacher_id === '') {
+			queryStr += 'teacher_id=NULL ';
+		}
+		else {
+			queryStr += `teacher_id='${course.teacher_id}' `;
+		}
+		queryStr += `WHERE course_id='${oriCourseId}' AND teacher_id='${oriTeacherId}';`;
+		await connection.query(queryStr);
+		// await connection.query
+		// 	(`UPDATE course
+		// 		SET course_id='${course.course_id}', name='${course.name}', teacher_id='${course.teacher_id}'
+		// 		WHERE course_id='${oriCourseId}' AND teacher_id='${oriTeacherId}';`
+		// 	);
 		const result = await connection.query(`SELECT ROW_COUNT()`);
 		console.log(result.count);
 		if (result.count === 1) {

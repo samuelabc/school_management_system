@@ -44,7 +44,9 @@ const TeachersPage = (props) => {
 		}
 		catch(err) {
 			console.log("delete failed", err.response.data.error);
-			window.alert(`delete failed\nError: ${err.response.data.error}`)
+			const error = JSON.parse(err.response.data.error);
+			const message = error[0].message;
+			window.alert(`delete failed\nError: ${message}`);
 		}
 	}
 	const handleUpdateTeacher = async(oriTeacherId, teacherObj) => {
@@ -59,8 +61,10 @@ const TeachersPage = (props) => {
 			return true;
 		}
 		catch(err) {
-			console.log("update failed", err.response);
-			window.alert(`update failed\nError: ${err.response.data.error}`);
+			console.log("update failed", err.response.data.error);
+			const error = JSON.parse(err.response.data.error);
+			const message = error[0].message;
+			window.alert(`update failed\nError: ${message}`);
 			return false;
 		}
 	}

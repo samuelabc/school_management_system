@@ -22,7 +22,29 @@ studentsRouter.post('/', async(req, res) => {
 	const student = req.body;
 	try {
 		const connection = await odbc.connect(connectionConfig);
-		await connection.query(`INSERT INTO student VALUES('${student.student_id}', '${student.name}', '${student.class_id}')`);
+		var queryStr = 'INSERT INTO student VALUES(';
+		if (student.student_id === '') {
+			queryStr += ('NULL,');
+		}
+		else {
+			queryStr += (`'${student.student_id}',`);
+		}
+		if (student.name === '') {
+			queryStr += ('NULL,');
+		}
+		else {
+			queryStr += (`'${student.name}',`);
+		} 
+		if (student.class_id === '') {
+			queryStr += ('NULL');
+		}
+		else {
+			queryStr += (`'${student.class_id}'`);
+		} 
+		queryStr += (')')
+		console.log(queryStr);
+		// await connection.query(`INSERT INTO student VALUES('${student.student_id}', '${student.name}', '${student.class_id}')`);
+		await connection.query(queryStr);
 		const result = await connection.query(`SELECT ROW_COUNT()`);
 		if (result.count === 1) {
 			res.status(204).end();
@@ -53,11 +75,11 @@ studentsRouter.delete('/:id', async (request, response) => {
 			response.status(204).end();
 		}
 		else {
-			response.status(404).send({ error:`${result}`});
+			response.status(404).json({error: `${JSON.stringify(result)}`});
 		}
 	}
 	catch(err) {
-		response.status(404).send({ error:`${err}`})
+		response.status(404).json({error: `${JSON.stringify(err.odbcErrors)}`});
 	}
 })
 
@@ -71,22 +93,46 @@ studentsRouter.put('/:id', async(request, response) => {
 		const id = request.params.id;
 		console.log('updatestudent',student);
 		console.log('id',id);
-		await connection.query
-			(`UPDATE student
-				SET student_id='${student.student_id}', name='${student.name}', class_id='${student.class_id}'
-				WHERE student_id='${id}';`
-			);
+		var queryStr = 'UPDATE student SET ';
+		if (student.student_id === '') {
+			queryStr += ('student_id=NULL, ');
+		}
+		else {
+			queryStr += (`student_id='${student.student_id}',`);
+		}
+		if (student.name === '') {
+			queryStr += ('name=NULL, ');
+		}
+		else {
+			queryStr += (`name='${student.name}',`);
+		} 
+		if (student.class_id === '') {
+			queryStr += ('class_id=NULL ');
+		}
+		else {
+			queryStr += (`class_id='${student.class_id}' `);
+		} 
+		queryStr += (`WHERE student_id='${id}';`)
+		console.log(queryStr);
+		await connection.query(queryStr);
+		// await connection.query
+		// 	(`UPDATE student
+		// 		SET student_id='${student.student_id}', name='${student.name}', class_id='${student.class_id}'
+		// 		WHERE student_id='${id}';`
+		// 	);
 		const result = await connection.query(`SELECT ROW_COUNT()`);
 		console.log(result.count);
 		if (result.count === 1) {
 			response.status(204).end();
 		}
 		else {
-			response.status(404).send({ error:`${result}`});
+			// response.status(404).send({ error:`${result}`});
+			response.status(404).json({error: `${JSON.stringify(result)}`});
 		}
 	}
 	catch(err) {
-		response.status(404).send({ error:`${err}`})
+		// response.status(404).send({ error:`${err}`})
+		response.status(404).json({error: `${JSON.stringify(err.odbcErrors)}`});
 	}
 })
 

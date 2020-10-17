@@ -43,8 +43,9 @@ const StudentsPage = (props) => {
 			setStudents(newStudentTable);
 		}
 		catch(err) {
-			console.log("delete failed", err.response.data.error);
-			window.alert(`delete failed\nError: ${err.response.data.error}`)
+			const error = JSON.parse(err.response.data.error);
+			const message = error[0].message;
+			window.alert(`delete failed\nError: ${message}`);
 		}
 	}
 	const handleUpdateStudent = async(oriStudentId, studentObj) => {
@@ -59,8 +60,10 @@ const StudentsPage = (props) => {
 			return true;
 		}
 		catch(err) {
-			console.log("update failed", err.response);
-			window.alert(`update failed\nError: ${err.response.data.error}`);
+			console.log("update failed", err.response.data.error);
+			const error = JSON.parse(err.response.data.error);
+			const message = error[0].message;
+			window.alert(`update failed\nError: ${message}`);
 			return false;
 		}
 	}
