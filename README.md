@@ -1,2 +1,2 @@
-This is a simple School Management System project. 
-It's frontend is built using react. It's backend is bulit using express, linking to MySQL through node-odbc.
+A simple School Management System web application, providing separate interfaces for student, teacher, and administrator. 
+Frontend is built with React. Backend is bulit with Express.js framework, communicating with MySQL database through ODBC API.
